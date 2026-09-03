@@ -1,0 +1,13 @@
+{
+  "name": "easyresearch-marketplace",
+  "owner": {
+    "name": "EasyResearch"
+  },
+  "plugins": [
+    {
+      "name": "easyresearch-workspace",
+      "source": "./plugins/easyresearch-workspace",
+      "description": "Prompt-based, single-writer research workflow for existing code workspaces."
+    }
+  ]
+}

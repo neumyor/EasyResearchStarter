@@ -1,7 +1,7 @@
 # Repository Agent Management Rules
 
 本文档描述负责维护本仓库的 agent 行为规范。本仓库以 **autoresearch skill 系统**为规范
-框架运行（四个 skill 的 `SKILL.md` 是各自程序细节的权威来源）。本文档只保留跨 skill、
+框架运行（五个 skill 的 `SKILL.md` 是各自程序细节的权威来源）。本文档只保留跨 skill、
 与具体程序无关的通用规则与约定。
 
 ## 规范框架与优先级
@@ -19,6 +19,9 @@
   6. 满足文档约定；
   7. 便利或整洁。
 - 不确定时优先**检查并记录**，而不是删除、重置、覆盖或静默修复。
+- **单写入者**：同一工作区任一时刻只能有一个 agent 进行写入、暂存或提交。写入前通过
+  `git rev-parse --git-path easyresearch-write-lock` 获取工作区锁；其他 agent 仅可只读检查，
+  不得并发修改。锁疑似遗留时，先确认原 owner 已不活跃并记录接管原因。
 
 ## Git 与提交（git ledger）
 
@@ -54,11 +57,15 @@
 ## 数据与实验规范
 
 - 数据目录约定：`resources/all_datasets/<dataset>/`，原始数据不入库。
-- 每个实验一个唯一 Experiment ID：`exp-YYYYMMDD-HHMMSS-<slug>`（北京时间）。轻量记录在
+- 每个实验一个唯一 Experiment ID：`exp-YYYYMMDD-HHMMSS-<topic>-<variant>[-seed-<seed>]`
+  （北京时间）。轻量记录在
   `docs/experiments/<id>/`（Git 跟踪：`EXPERIMENT.md`、`params/`、`logs/`、`results/`、
   `artifacts.csv`）；重量产物在 `research_run/<id>/`（Git-ignore，用 `artifacts.csv` 索引）。
-- **结构化/定量实验结果必须以 CSV 落盘并随实验记录入库**；Markdown 只能总结、不能作为
-  定量结果的唯一存储。失败实验同样是研究结果，必须记录（含原因 CSV / 日志）。
+- 实验命名为 `exp-YYYYMMDD-HHMMSS-<topic>-<variant>[-seed-<seed>]`：时间为北京时间，
+  topic/variant 均为 2–24 字符的小写 kebab-case；每次独立运行（包括不同 seed）均使用新 ID。
+- **指标摘要必须以 `results/metrics.csv` 入库**；Markdown 只能总结、不能作为指标唯一来源。
+  大型预测、embedding、trace 等可置于 `research_run/<id>/`，使用合适格式并在
+  `artifacts.csv` 索引。失败实验同样必须留下摘要与日志。
 - 新增实验脚本或修改默认超参时，说明数据集与路径、关键超参、运行命令、输出目录，
   并记录修改前后值与原因。
 

@@ -1,0 +1,20 @@
+{
+  "name": "easyresearch-marketplace",
+  "interface": {
+    "displayName": "EasyResearch"
+  },
+  "plugins": [
+    {
+      "name": "easyresearch-workspace",
+      "source": {
+        "source": "local",
+        "path": "./plugins/easyresearch-workspace"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

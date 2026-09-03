@@ -3,8 +3,9 @@
 本文档说明在本仓库内开展持续、自主、证据驱动的模型研究：如何启动、按什么流程跑通一轮
 「假设 → 最小实现 → 对照实验 → bad case 分析 → 决策」，以及应遵守的研究方法学。
 
-**执行纪律与记录格式以四个 skill 的 `SKILL.md` 为准**：`autoresearch-orchestrator`、
-`research-environment`、`research-git-ledger`、`research-experiment`。本文档只补充
+**执行纪律与记录格式以五个 skill 的 `SKILL.md` 为准**：`autoresearch-orchestrator`、
+`research-environment`、`research-git-ledger`、`research-experiment`、
+`easyresearch-adopt-workspace`。本文档只补充
 跨实验、与程序无关的方法学原则，不与其冲突。
 
 ---
@@ -21,15 +22,21 @@
 
 ## 2. 实验纪律（要点）
 
-- **Experiment ID**：`exp-YYYYMMDD-HHMMSS-<slug>`（北京时间到秒）。
+- **Experiment ID**：`exp-YYYYMMDD-HHMMSS-<topic>-<variant>[-seed-<seed>]`（北京时间到秒）。
+  topic 与 variant 均为 2–24 字符的小写 kebab-case；每次独立执行、包括每个重复 seed，
+  都使用新的 ID。
 - **轻量记录**：`docs/experiments/<id>/`，Git 跟踪，含 `EXPERIMENT.md`、`params/`、
   `logs/`、`results/`、`artifacts.csv`。
 - **重量产物**：`research_run/<id>/`（Git-ignore），在 `artifacts.csv` 中索引。
-- **结果必须落 CSV**：定量/结构化结果写入 `results/*.csv` 并入 Git；Markdown 只能总结。
+- **结果摘要必须落 CSV**：定量指标写入 `results/metrics.csv` 并入 Git；Markdown 只能总结。
+  大型预测/embedding/trace 可用 Parquet、NPZ、JSONL 等合适格式置于 `research_run/`，
+  并在 `artifacts.csv` 记录路径、格式、用途及可行时的校验和。
 - **PRE-RUN 冻结**：执行前先 PRE-RUN commit 冻结代码与参数；之后不得边改边称同一实验。
   失败/中止也是结果，记录原因并提交（见 skill `research-experiment`）。
 - **时间戳**：研究日志一律北京时间（`UTC+08:00`），带秒。
 - **秘密**：ENV.md、docs、commit message、实验记录中不得出现 token / 凭据。
+- **单写入者**：任何编辑、运行前准备、暂存或提交都必须由持有工作区锁的唯一 agent 完成；
+  其他 agent 只能只读分析。
 
 ## 3. 初始化与基线
 
@@ -47,6 +54,8 @@
 ## 4. 假设与方法学
 
 - 每次改动对应一个明确假设；先建立基线再评价改进；每次失败都转化为下一轮可执行方向。
+- PRE-RUN 前在 EXPERIMENT.md 完成研究契约：数据集版本/指纹与 split、比较基线、主指标与
+  方向/阈值、随机种子与重复次数、资源预算及停止条件。
 - **创新性筛选**：须提出清晰的机制 / 结构约束 / 归纳偏置 / 理论动机 / 直接针对 bad case
   的算法改进。仅「新增 residual 分支」「gate 初始化 0.999」「切 loss/lr/batch size」最多
   算消融或工程 baseline，不能包装成新方法。

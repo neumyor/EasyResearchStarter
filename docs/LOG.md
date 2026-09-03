@@ -11,6 +11,79 @@ the full protocol and entry format.
 
 ---
 
+## CMT-20260903-174518-01 — Package portable single-writer research workflow
+
+- Beijing time: 2026-09-03 17:45:18+08:00
+- Branch: main
+- Parent commit: 2770cde
+- Commit type: INTEGRATION
+- Experiment IDs: none
+
+### Purpose
+
+Strengthen the prompt-based research workflow for single-writer operation and
+reproducible experiment records, then package it for safe reuse in existing
+Codex and Claude Code workspaces without overwriting their code or skills.
+
+### Since previous commit
+
+#### Code / configuration
+
+- Added a workspace-local, Git-metadata single-writer lock protocol. It guards
+  all Agent writes, staging, and commits while leaving read-only inspection
+  available to other agents.
+- Expanded the experiment record into a research contract covering immutable
+  dataset identity, baseline, primary metric and threshold, seeds/replications,
+  resource budget, and stop condition.
+- Defined the experiment ID format
+  `exp-YYYYMMDD-HHMMSS-<topic>-<variant>[-seed-<seed>]` and state transitions.
+- Replaced the CSV-only output rule with a required tracked
+  `results/metrics.csv` summary plus indexed, appropriately formatted heavy raw
+  outputs (for example Parquet, NPZ, or JSONL).
+- Added `easyresearch-adopt-workspace`, an explicit opt-in skill whose default
+  plugin-only mode leaves a target workspace untouched.
+- Added native Codex and Claude Code plugin manifests, marketplace catalogs,
+  and a portable `easyresearch-workspace` package whose skills are namespaced
+  `easyresearch-*` to avoid collisions with pre-existing user skills.
+
+#### Documentation
+
+- Updated README with direct template usage, non-destructive adoption modes,
+  and Codex/Claude marketplace installation instructions.
+- Updated both host entry files and research guidance to reflect the fifth
+  skill, single-writer ownership, experiment contract, naming convention, and
+  metric-summary rule.
+- Updated environment discovery to scan currently available proxy listeners and
+  run a read-only GitHub SSH-over-443 connectivity test before networked Git
+  operations.
+
+#### Research activity
+
+- Reviewed the four original skills for enforcement gaps and selected a pure
+  prompt-based approach, as requested; no project validation scripts were
+  added.
+- Validated JSON manifests and every skill frontmatter header. Confirmed the
+  `.agents/skills/` and `.claude/skills/` trees are identical. Claude Code's
+  plugin validator accepted the plugin manifest and marketplace (the installed
+  version emits only a non-blocking marketplace-description warning).
+
+### Results and conclusions
+
+No model experiment was run. The repository now supports two safe modes:
+direct template use and plugin-based reuse in an existing workspace. A GitHub
+URL alone never authorizes silent mutation; installation adds capabilities to
+the agent, while persistent workspace adoption remains explicit and additive.
+
+### Artifacts and deliverables
+
+- Git-tracked: updated dual-host skills and guidance, Codex marketplace
+  `.agents/plugins/marketplace.json`, Claude marketplace
+  `.claude-plugin/marketplace.json`, and the portable plugin under
+  `plugins/easyresearch-workspace/`.
+- Heavy/local: none.
+
+---
+
 ## CMT-20260903-161527-01 — Initialize autoresearch framework repository
 
 - Beijing time: 2026-09-03 16:15:27+08:00
@@ -65,4 +138,3 @@ git-initialized starting point for the first autonomous research round.
 - Heavy/local: none. `ENV.md` to be generated on first `research-environment` run.
 
 ---
-

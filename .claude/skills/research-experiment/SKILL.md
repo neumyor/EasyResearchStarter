@@ -15,7 +15,7 @@ Manage each experiment as a first-class research object with:
 - one Git-ignored heavy artifact directory;
 - a written plan before execution;
 - a PRE-RUN commit before execution;
-- CSV-based result persistence;
+- Git-tracked metric-summary persistence and indexed large outputs;
 - a written post-run analysis;
 - a POST-RUN commit after analysis.
 
@@ -24,24 +24,26 @@ Manage each experiment as a first-class research object with:
 Use:
 
 ```text
-exp-YYYYMMDD-HHMMSS-<slug>
+exp-YYYYMMDD-HHMMSS-<topic>-<variant>[-seed-<seed>]
 ```
 
-Timestamp is Beijing time.
+The timestamp is Beijing time. `topic` names the research question and
+`variant` names the intervention or comparator; both must be lowercase,
+hyphenated, descriptive, and 2–24 characters. Keep the full ID at most 96
+characters. One ID represents one independently executed run. A repeated seed
+is a separate run and therefore receives its own ID with `-seed-<seed>`.
 
 Example:
 
 ```text
-exp-20260903-151823-attn-head-dim
+exp-20260903-151823-attention-head-width-seed-17
 ```
 
 Collision fallback:
 
 ```text
-exp-20260903-151823-attn-head-dim-02
+exp-20260903-151823-attention-head-width-seed-17-v02
 ```
-
-The slug should be short, lowercase, hyphenated, and descriptive.
 
 ## Branch association
 
@@ -104,7 +106,7 @@ Use for:
 - metadata;
 - parameter/configuration files;
 - raw textual logs that are small enough for Git;
-- CSV results;
+- metric-summary CSV results;
 - experiment analysis and conclusion;
 - heavy-artifact index.
 
@@ -165,6 +167,18 @@ PLANNED
 
 Why this experiment is being performed.
 
+## Research Contract
+
+- Objective and scope:
+- Dataset manifest: name, version/source, split identifier, and a safe content
+  fingerprint or immutable version reference:
+- Baseline/comparator and its Experiment ID or commit:
+- Primary metric, direction, aggregation, and decision threshold:
+- Secondary metrics:
+- Random seed and planned number of independent repetitions:
+- Maximum resource budget: wall time, compute, and any user-specified cost cap:
+- Stop condition:
+
 ## Hypothesis
 
 What change is expected to cause what result, and why.
@@ -208,9 +222,9 @@ Pending.
 
 Pending.
 
-All structured or quantitative results must be stored under:
+The Git-tracked metric summary must be stored at:
 
-`results/*.csv`
+`results/metrics.csv`
 
 ## Analysis
 
@@ -235,14 +249,17 @@ Before any experiment process is launched:
 8. write Hypothesis;
 9. write Plan;
 10. record parameters/configuration;
-11. create `artifacts.csv`;
-12. modify or write experiment code;
-13. ensure experiment code routes:
+11. complete the Research Contract, including data identity, baseline, metric,
+    seed/replication plan, and resource budget;
+12. create `artifacts.csv`;
+13. modify or write experiment code;
+14. ensure experiment code routes:
     - light logs/results to the light directory;
     - heavy artifacts to the heavy directory;
-14. verify that Results, Analysis, and Conclusion are still empty/pending;
-15. use `research-git-ledger` to create PRE-RUN commit;
-16. only then launch the experiment.
+15. verify that Results, Analysis, and Conclusion are still empty/pending;
+16. acquire or confirm ownership of the single-writer workspace lock;
+17. use `research-git-ledger` to create PRE-RUN commit;
+18. only then launch the experiment.
 
 ## PRE-RUN immutability rule
 
@@ -295,15 +312,30 @@ Adapt to the project language and structure.
 
 Do not require the project to copy this exact code if a better native implementation exists.
 
-## Results must be CSV
+## Result summaries and large outputs
 
-Every experimental result must be persisted as one or more CSV files under:
+Every experiment MUST persist a Git-tracked metric summary CSV under:
 
 ```text
-docs/experiments/<id>/results/
+docs/experiments/<id>/results/metrics.csv
 ```
 
-This includes failed or partial runs where structured result information exists.
+It must identify the experiment ID, metric name, split, aggregation, value,
+metric direction, and the baseline/comparator where relevant. Failed or partial
+runs must include a small structured failure summary when available.
+
+Recommended `metrics.csv` schema:
+
+```csv
+experiment_id,metric,split,aggregation,direction,value,baseline,comparison_note
+exp-20260903-151823-attention-head-width-seed-17,accuracy,validation,mean,maximize,0.842,baseline-v1,+0.018
+```
+
+Large structured outputs such as per-example predictions, embeddings, traces,
+or tensors may use Parquet, NPZ, JSONL, or another suitable format under
+`research_run/<id>/`. Index each such artifact in `artifacts.csv` with its
+repository-relative path, format, purpose, and checksum when practical. Do not
+force large outputs into CSV merely to satisfy the summary rule.
 
 Examples:
 
@@ -351,7 +383,7 @@ docs/experiments/<id>/artifacts.csv
 Recommended schema:
 
 ```csv
-artifact_type,path,description,created_at_bjt
+artifact_type,path,format,description,checksum_sha256,created_at_bjt
 ```
 
 Paths should normally be repository-relative.
@@ -366,7 +398,7 @@ When starting execution:
 2. confirm parameters correspond to PRE-RUN state;
 3. confirm output directories match the experiment ID;
 4. record start time;
-5. run experiment;
+5. confirm ownership of the single-writer workspace lock, then run experiment;
 6. preserve raw logs;
 7. preserve partial outputs if failure occurs;
 8. record end time and exit status.
@@ -378,7 +410,7 @@ Do not modify `EXPERIMENT.md` analysis while the experiment is still producing r
 After execution has ended:
 
 1. inspect raw logs;
-2. inspect every relevant result CSV;
+2. inspect `results/metrics.csv` and every relevant indexed raw output;
 3. inspect indexed heavy artifacts as needed;
 4. compare against the stated baseline or success criteria;
 5. distinguish observations from interpretation;
@@ -404,7 +436,8 @@ Include:
 
 ### Results
 
-Summarize important values and point to exact CSV files.
+Summarize important values and point to `results/metrics.csv` plus relevant
+indexed raw artifacts.
 
 ### Analysis
 
@@ -446,11 +479,15 @@ POST-RUN COMMITTED
 
 Use a status that truthfully reflects reality.
 
+Normal transitions are `PLANNED → PREPARED → PRE-RUN COMMITTED → RUNNING →
+COMPLETED|FAILED|ABORTED → ANALYZED → POST-RUN COMMITTED`. A correction that
+changes results must create a new Experiment ID rather than moving backward.
+
 ## Post-run closure
 
 Before closing the experiment:
 
-1. verify result CSV files exist;
+1. verify `results/metrics.csv` exists and captures the primary metric;
 2. verify logs are preserved;
 3. verify heavy artifacts are located correctly;
 4. verify important heavy artifacts are indexed;

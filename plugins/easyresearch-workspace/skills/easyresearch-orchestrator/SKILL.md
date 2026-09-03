@@ -1,5 +1,5 @@
 ---
-name: autoresearch-orchestrator
+name: easyresearch-orchestrator
 description: Orchestrates autonomous research work in a Git repository by coordinating environment discovery, experiment lifecycle, commit logging, execution, analysis, and repository integrity.
 ---
 
@@ -15,9 +15,9 @@ Do not duplicate detailed Git, environment, or experiment procedures when a foun
 
 ## Required companion skills
 
-- `research-environment`
-- `research-git-ledger`
-- `research-experiment`
+- `easyresearch-environment`
+- `easyresearch-git-ledger`
+- `easyresearch-experiment`
 
 ## Global invariants
 
@@ -73,7 +73,7 @@ When entering a repository:
 5. Confirm `.gitignore` ignores:
    - `/ENV.md`
    - `/research_run/`
-6. Invoke the `research-environment` procedure.
+6. Invoke the `easyresearch-environment` procedure.
 7. Inspect current Git state:
    - current branch;
    - HEAD;
@@ -103,14 +103,14 @@ Repeat:
    - stop because the research objective is satisfied or blocked.
 3. Use the appropriate foundational skill.
 4. Verify resulting repository and experiment state.
-5. Record any required commit through `research-git-ledger`.
+5. Record any required commit through `easyresearch-git-ledger`.
 6. Continue.
 
 ## Experiment entry protocol
 
 Before running any experiment:
 
-1. Use `research-experiment` to:
+1. Use `easyresearch-experiment` to:
    - create or confirm the Experiment ID;
    - establish the experiment branch association;
    - create the light directory;
@@ -121,7 +121,7 @@ Before running any experiment:
    - route light and heavy outputs correctly;
    - leave result/analysis/conclusion sections empty.
 2. Inspect the planned run for reproducibility.
-3. Use `research-git-ledger` to create a PRE-RUN commit.
+3. Use `easyresearch-git-ledger` to create a PRE-RUN commit.
 4. Record the resulting commit identity in the experiment record where appropriate.
 5. Only then start the experiment.
 
@@ -136,7 +136,7 @@ After execution:
 4. Update `artifacts.csv`.
 5. Analyze the experiment from the metric summary and any indexed raw outputs.
 6. Complete the experiment record.
-7. Use `research-git-ledger` to create a POST-RUN commit.
+7. Use `easyresearch-git-ledger` to create a POST-RUN commit.
 8. Decide the next research action.
 
 ## Mutation after PRE-RUN

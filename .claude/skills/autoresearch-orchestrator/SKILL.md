@@ -29,18 +29,44 @@ MUST:
 - Ensure every experiment has one unique Experiment ID.
 - Ensure every experiment has a PRE-RUN commit before execution.
 - Never allow result-affecting code or parameters to change after PRE-RUN while still treating the run as the same experiment.
-- Ensure every experiment result is persisted as CSV under its light experiment directory.
+- Ensure every experiment has a Git-tracked `results/metrics.csv` summary and
+  indexes any large raw outputs under `research_run/<experiment-id>/`.
 - Store large artifacts under `research_run/<experiment-id>/`.
 - Ensure important heavy artifacts are indexed in the experiment's Git-tracked `artifacts.csv`.
 - Keep `ENV.md` and `research_run/` out of Git.
 - Preserve and record failed experiments.
 - Never store secrets in research documentation, logs, commit messages, or ENV files.
 
+## Single-writer workspace lock
+
+Only one agent may write to a workspace at a time. This includes edits to code,
+docs, experiment records, Git staging, commits, and lock state; read-only
+inspection may proceed without the lock.
+
+Before the first write, acquire the workspace-local lock through Git metadata:
+
+```bash
+git rev-parse --git-path easyresearch-write-lock
+```
+
+Create the returned lock directory atomically, record the agent/session
+identifier, task, acquisition time, and last activity time in its `OWNER.md`,
+then re-check that it belongs to the current agent. Do not write if the lock is
+held by another agent. Refresh the activity time during a long-running task and
+release the lock only after all writes are complete.
+
+If a lock appears stale, first inspect its owner and last activity. Take it over
+only after confirming the owner is no longer active and recording the recovery
+reason. Never delete an active or ambiguous lock. In a non-Git workspace, use
+the additive `.easyresearch/write-lock/` location instead; do not overwrite an
+existing lock.
+
 ## Startup procedure
 
 When entering a repository:
 
-1. Inspect repository root.
+1. Inspect repository root and acquire the single-writer lock before creating
+   or changing any file.
 2. Confirm `docs/` exists; create it if missing.
 3. Confirm `docs/LOG.md` exists; initialize it if missing.
 4. Confirm `docs/experiments/` exists; create it if missing.
@@ -104,10 +130,11 @@ Before running any experiment:
 After execution:
 
 1. Preserve raw logs.
-2. Persist all structured/quantitative results as CSV.
+2. Persist the required metric summary as `results/metrics.csv` and route large
+   raw structured outputs to `research_run/<experiment-id>/`.
 3. Preserve heavy artifacts under `research_run/<experiment-id>/`.
 4. Update `artifacts.csv`.
-5. Analyze the experiment from persisted outputs, especially CSV result files.
+5. Analyze the experiment from the metric summary and any indexed raw outputs.
 6. Complete the experiment record.
 7. Use `research-git-ledger` to create a POST-RUN commit.
 8. Decide the next research action.
@@ -143,8 +170,9 @@ All deliverable research documents must be located under `docs/`.
 Before declaring work complete:
 
 1. verify required documents exist;
-2. verify experiment results are present as CSV;
+2. verify `results/metrics.csv` is present and large outputs are indexed;
 3. verify important heavy artifacts are indexed;
 4. verify `docs/LOG.md` covers all agent-created commits;
 5. verify `ENV.md` and `research_run/` are not tracked;
 6. verify repository state is intentional and explain any remaining uncommitted files.
+7. release the single-writer lock after all write work is complete.

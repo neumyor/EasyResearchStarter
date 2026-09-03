@@ -1,5 +1,5 @@
 ---
-name: research-experiment
+name: easyresearch-experiment
 description: Defines the complete lifecycle and record structure for autonomous experiments, including experiment naming, planning, branch association, light/heavy artifact routing, execution, CSV results, analysis, failure handling, and closure.
 ---
 
@@ -258,7 +258,7 @@ Before any experiment process is launched:
     - heavy artifacts to the heavy directory;
 15. verify that Results, Analysis, and Conclusion are still empty/pending;
 16. acquire or confirm ownership of the single-writer workspace lock;
-17. use `research-git-ledger` to create PRE-RUN commit;
+17. use `easyresearch-git-ledger` to create PRE-RUN commit;
 18. only then launch the experiment.
 
 ## PRE-RUN immutability rule
@@ -494,7 +494,7 @@ Before closing the experiment:
 5. complete Analysis;
 6. complete Conclusion;
 7. update status;
-8. invoke `research-git-ledger`;
+8. invoke `easyresearch-git-ledger`;
 9. create POST-RUN commit.
 
 ## Failed experiments

@@ -1,0 +1,24 @@
+{
+  "name": "easyresearch-workspace",
+  "version": "1.0.0",
+  "description": "Prompt-based, single-writer research workflow for existing code workspaces.",
+  "author": {
+    "name": "EasyResearch"
+  },
+  "homepage": "https://github.com/neumyor/EasyResearchStarter",
+  "repository": "https://github.com/neumyor/EasyResearchStarter",
+  "keywords": ["research", "experiments", "reproducibility", "git"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "EasyResearch Workspace",
+    "shortDescription": "Run traceable research without modifying existing code by default.",
+    "longDescription": "Provides namespaced, prompt-based skills for safe workspace adoption, single-writer research, experiment records, environment discovery, and Git provenance.",
+    "developerName": "EasyResearch",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "defaultPrompt": [
+      "Adopt EasyResearch in this workspace without changing existing code.",
+      "Run a traceable research experiment with a single-writer lock."
+    ]
+  }
+}

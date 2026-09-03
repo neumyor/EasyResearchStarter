@@ -1,5 +1,5 @@
 ---
-name: research-git-ledger
+name: easyresearch-git-ledger
 description: Enforces the repository's Git commit protocol by pairing every agent-created commit with exactly one detailed docs/LOG.md entry using a shared Research-Log-ID.
 ---
 

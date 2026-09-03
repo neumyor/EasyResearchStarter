@@ -1,5 +1,5 @@
 ---
-name: research-environment
+name: easyresearch-environment
 description: Discovers and records machine-specific research capabilities, including uv, Conda, compute resources, Git, and GitHub communication capabilities, in a Git-ignored ENV.md file.
 ---
 

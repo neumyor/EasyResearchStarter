@@ -31,6 +31,8 @@ MUST:
 - Never place credentials or secrets in the log or commit message.
 - Inspect repository state before commit.
 - Preserve uncommitted work when its provenance is unclear.
+- Hold the `easyresearch-write-lock` for the entire write, stage, and commit
+  operation; do not create a commit while another agent owns the lock.
 
 ## Research-Log-ID
 
@@ -178,6 +180,8 @@ Before creating a PRE-RUN commit, verify:
 - output routing distinguishes light and heavy artifacts;
 - `artifacts.csv` exists;
 - no experiment execution has yet occurred for this experiment version.
+- the required research contract is complete, including dataset identity,
+  comparator, primary metric, seed/replication plan, and resource budget.
 
 The PRE-RUN commit is the frozen provenance boundary for the executed code and parameters.
 
@@ -187,11 +191,14 @@ Before creating a POST-RUN commit, verify:
 
 - execution has ended in success, failure, or explicit abort;
 - raw logs are preserved when available;
-- structured/quantitative results are stored as CSV;
+- `results/metrics.csv` records the required metric summary and any important
+  large raw outputs are indexed in `artifacts.csv`;
 - heavy artifacts are stored under `research_run/<experiment-id>/`;
 - important heavy artifacts are indexed in `artifacts.csv`;
 - `EXPERIMENT.md` contains analysis and conclusion;
 - status is updated.
+- the persisted metric summary identifies the exact primary metric and the
+  comparison against the stated baseline.
 
 ## Commit creation
 
