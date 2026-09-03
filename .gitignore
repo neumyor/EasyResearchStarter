@@ -1,0 +1,30 @@
+# ---- Environment snapshot (skill: research-environment) ----
+# ENV.md is a machine-specific capability snapshot; never commit it.
+/ENV.md
+
+# ---- Heavy experiment artifacts ----
+# Large, machine-local experiment outputs stay out of Git. They are indexed
+# from the Git-tracked docs/experiments/<experiment-id>/artifacts.csv.
+# (skill: research-experiment)
+/research_run/
+/log/
+/selected_exps/
+
+# NOTE: CSV result files under docs/experiments/ ARE Git-tracked by design.
+# The blanket "*.csv" ignore was intentionally removed: experiment results must
+# be persisted and committed as CSV (autoresearch invariant).
+
+# ---- Data ----
+# Raw datasets are not committed. Convention: resources/all_datasets/<dataset>/
+/resources/
+
+# ---- Python ----
+__pycache__/
+*.pyc
+.venv/
+
+# ---- Local tooling config (machine-specific) ----
+.claude/settings.local.json
+
+# ---- OS noise ----
+.DS_Store
