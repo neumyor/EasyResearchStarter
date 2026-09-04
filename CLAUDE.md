@@ -17,7 +17,8 @@ files are the source of truth for their procedures.
 - `/research-environment` — machine/resource discovery; maintains the
   Git-ignored `ENV.md` capability snapshot.
 - `/research-git-ledger` — commit protocol: every agent-created commit maps to
-  exactly one `docs/LOG.md` entry, joined by a shared `Research-Log-ID`.
+  exactly one newest-first `docs/LOG.md` entry, joined by a shared
+  `Research-Log-ID`; read the ledger progressively from its head.
 - `/research-experiment` — experiment lifecycle: naming, light/heavy record
   layout, PRE-RUN/POST-RUN commits, CSV-based result persistence, failure and
   closure handling.

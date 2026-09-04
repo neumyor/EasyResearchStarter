@@ -17,7 +17,7 @@
 |---|---|---|
 | `autoresearch-orchestrator` | 控制平面：决定下一步做什么，协调其余三个 | `/autoresearch-orchestrator`（Claude Code）<br>`$autoresearch-orchestrator`（Codex） |
 | `research-environment` | 机器/资源发现，维护 Git-ignore 的 `ENV.md` 快照 | `/research-environment` |
-| `research-git-ledger` | commit 协议：每个 agent 创建的 commit 恰好对应一条 `docs/LOG.md`，用 `Research-Log-ID` 关联 | `/research-git-ledger` |
+| `research-git-ledger` | commit 协议：每个 agent 创建的 commit 恰好对应一条按最新优先排列的 `docs/LOG.md`，用 `Research-Log-ID` 关联 | `/research-git-ledger` |
 | `research-experiment` | 实验生命周期：命名、light/heavy 记录、PRE-RUN/POST-RUN commit、CSV 结果、失败与收尾 | `/research-experiment` |
 | `easyresearch-adopt-workspace` | 将工作流增量接入一个既有工作区；默认 plugin-only，不覆写已有内容 | `/easyresearch-adopt-workspace`（Claude Code）<br>`$easyresearch-adopt-workspace`（Codex） |
 
@@ -25,6 +25,8 @@
 
 - `docs/` 是唯一 Git 跟踪的研究文档/交付根目录；`docs/LOG.md` 是研究 ledger。
 - 每个 commit ↔ 一条 LOG 记录，共享 `Research-Log-ID`（`CMT-YYYYMMDD-HHMMSS-NN`）。
+- LOG 新记录写在文件头部（说明后的首个分隔线下），保持最近到最早；读取从头部按需渐进
+  展开，避免一次性载入无关历史。
 - 同一工作区仅一个写入 agent：写入、暂存和提交前须持有 Git 元数据中的工作区锁；其他 agent
   仅能只读。
 - 所有研究时间戳使用**北京时间（UTC+08:00）到秒**。

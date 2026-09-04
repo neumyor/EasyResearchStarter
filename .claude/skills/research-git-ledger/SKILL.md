@@ -30,6 +30,12 @@ MUST:
   - conclusions;
   - delivered/generated artifacts and locations.
 - Keep commit/log pairing one-to-one.
+- Keep `docs/LOG.md` in reverse chronological order: insert every new entry
+  immediately below the introductory `---`, before all existing entries; never
+  append a new entry to the end.
+- Read `docs/LOG.md` progressively from its head: begin with its introduction
+  and newest entry, then inspect older entries only when they are relevant to
+  the requested state or commit. Do not load the entire ledger by default.
 - Never place credentials or secrets in the log or commit message.
 - Inspect repository state before commit.
 - Preserve uncommitted work when its provenance is unclear.
@@ -51,6 +57,26 @@ CMT-20260903-153012-01
 ```
 
 Use Beijing time.
+
+## LOG.md ordering and progressive access
+
+`docs/LOG.md` is a newest-to-oldest research ledger. Keep its introductory
+text and first `---` intact. When creating a record, place the complete new
+entry immediately after that separator, followed by every older entry. This
+makes the current state available at the file head without disturbing history.
+
+When reading the ledger:
+
+1. read the introduction and newest entry (or the few newest entries needed
+   for the task) from the file head;
+2. use a targeted search for a known `Research-Log-ID`, Experiment ID, commit,
+   or topic when older context may be relevant;
+3. expand to older entries incrementally and stop once the needed context is
+   established.
+
+Do not bulk-read the full log merely because it exists. If the task genuinely
+requires historical reconstruction, state that reason and continue in bounded
+chunks from newest to oldest.
 
 If multiple commit records share the same second, increment the suffix.
 
@@ -82,7 +108,8 @@ Before writing the log entry:
 2. inspect HEAD and parent context;
 3. inspect staged, unstaged, and untracked changes;
 4. inspect recent Git history;
-5. inspect the previous relevant `docs/LOG.md` entry;
+5. inspect the newest relevant `docs/LOG.md` entry progressively, starting at
+   the file head and expanding to older entries only when needed;
 6. identify all material research activity since the previous commit;
 7. determine whether the planned commit boundary is coherent.
 
@@ -204,7 +231,8 @@ Before creating a POST-RUN commit, verify:
 
 ## Commit creation
 
-After the log entry is complete and verified:
+After the log entry has been inserted at the head of the ledger, is complete,
+and is verified:
 
 1. stage the intended files;
 2. re-check the staged diff;

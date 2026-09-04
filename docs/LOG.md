@@ -11,6 +11,60 @@ the full protocol and entry format.
 
 ---
 
+## CMT-20260904-203739-01 — Make research ledger newest-first
+
+- Beijing time: 2026-09-04 20:37:39+08:00
+- Branch: main
+- Parent commit: d6d0e86
+- Commit type: DOCS
+- Experiment IDs: none
+
+### Purpose
+
+Make research-log ordering deterministic and prevent routine ledger inspection
+from consuming context on irrelevant historical records.
+
+### Since previous commit
+
+#### Code / configuration
+
+- Added a mandatory newest-to-oldest ledger rule: each new `docs/LOG.md` entry
+  is inserted immediately below the introductory separator rather than appended.
+- Added progressive log access: agents begin at the file head and newest entry,
+  use targeted lookup for known identifiers, and expand older entries only when
+  necessary.
+- Applied the same behavior to both repository-hosted skill trees and the
+  portable namespaced Codex/Claude plugin skills.
+- Bumped the portable plugin version from `1.0.1` to `1.0.2`.
+
+#### Documentation
+
+- Updated the workspace instructions, management rules, research guide, and
+  README to state the write order and bounded-read expectation.
+
+#### Research activity
+
+- No experiment was run; this is a prompt-only workflow change.
+
+### Results and conclusions
+
+The ledger now exposes current research state at its head while preserving all
+older records. Routine agents should retain less irrelevant history in context
+without losing a path to progressively reconstruct it when required.
+
+### Artifacts and deliverables
+
+- Git-tracked: synchronized Claude/Codex skills, portable plugin manifests,
+  workflow documentation, and this ledger entry.
+- Heavy/local: none.
+
+### Notes
+
+- The existing ledger was already newest-first; this entry is inserted at the
+  mandated location to establish the rule in both content and procedure.
+
+---
+
 ## CMT-20260904-133324-01 — Require visual review of generated figures
 
 - Beijing time: 2026-09-04 13:33:24+08:00

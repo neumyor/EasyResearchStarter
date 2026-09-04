@@ -16,7 +16,7 @@
   （机器能力快照）。
 - 用户提出自主科研、持续迭代、实验驱动优化等请求时，调用 `/autoresearch-orchestrator`
   （Claude Code）或 `$autoresearch-orchestrator`（Codex）。它会检查 git 与 `docs/LOG.md`
-  状态、恢复未完成的实验，然后进入主循环。
+  状态（从文件头开始按需渐进读取），恢复未完成的实验，然后进入主循环。
 - 单次明确请求需要完整对照实验与样本级错误分析时，先写 EXPERIMENT.md（含基线、目标、
   退出条件），走完 skill `research-experiment` 的生命周期，不要另起一套存储约定。
 
@@ -85,6 +85,8 @@
 - 关键实验的可复现信息（日期、commit/Research-Log-ID、数据集/horizon/split、命令、
   参数、指标、环境、产物路径、结论与失败原因）随 skill `research-git-ledger` /
   `research-experiment` 的记录规则落盘；失败实验同样记录。
+- `docs/LOG.md` 的记录从最近到最早排列：新条目写在开头说明后的第一个分隔线下；需要
+  追溯时先读最新条目，再按需向旧条目渐进展开，避免无关历史挤占上下文。
 
 ## 7. 退出条件
 

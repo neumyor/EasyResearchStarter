@@ -25,6 +25,8 @@ MUST:
 
 - Treat `docs/` as the only root for Git-tracked research documentation and deliverables.
 - Ensure every agent-created Git commit has exactly one corresponding `docs/LOG.md` entry.
+- Keep `docs/LOG.md` newest-first, and inspect it progressively from its head
+  instead of loading its full history by default.
 - Use Beijing time (`UTC+08:00`) with seconds in all research timestamps.
 - Ensure every experiment has one unique Experiment ID.
 - Ensure every experiment has a PRE-RUN commit before execution.
@@ -82,7 +84,8 @@ When entering a repository:
    - HEAD;
    - dirty/untracked files;
    - relevant existing research branches;
-   - recent `docs/LOG.md` state.
+   - recent `docs/LOG.md` state, read progressively from the file head and
+     expanded only as needed.
 8. Inspect existing experiments and determine whether any are:
    - planned;
    - prepared;

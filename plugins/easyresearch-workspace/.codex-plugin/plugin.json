@@ -1,6 +1,6 @@
 {
   "name": "easyresearch-workspace",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Prompt-based, single-writer research workflow for existing code workspaces.",
   "author": {
     "name": "EasyResearch"

@@ -28,6 +28,9 @@
 - 仓库使用 git。Agent 创建的**每一次 commit 必须有且仅有一条 `docs/LOG.md` 记录**，
   并用同一 `Research-Log-ID`（格式 `CMT-YYYYMMDD-HHMMSS-NN`，**北京时间到秒**）作为
   commit message trailer 与 LOG 条目的 join key。详见 skill `research-git-ledger`。
+- `docs/LOG.md` 固定按**从最近到最早**排序：新记录插入开头说明后的第一个 `---` 下方，
+  不得追加到文件末尾。读取时从文件头和最新记录开始，按需逐条向旧记录扩展；除非确有
+  历史重建需要，不得一次性读取整个 LOG 以消耗上下文。
 - 实验执行前必须有 **PRE-RUN commit**，冻结将运行的代码与参数；PRE-RUN 之后任何可能
   影响结果的内容（代码、参数、数据、seed、评估配置、影响结果的环境选择）不得在仍称
   为同一实验的情况下改动。确需改动：停跑 → 记录原因 → 标记状态 → 新建 Experiment ID
