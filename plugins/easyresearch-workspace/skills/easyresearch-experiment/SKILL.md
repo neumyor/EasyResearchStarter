@@ -312,6 +312,22 @@ Adapt to the project language and structure.
 
 Do not require the project to copy this exact code if a better native implementation exists.
 
+## Visual artifact review
+
+When an experiment generates a material chart, figure, plot, or image (for
+example via Matplotlib, Seaborn, Plotly export, or another renderer), treat the
+rendered file as an artifact that needs visual QA. If the current host provides
+a direct image viewer, preview, or equivalent image-inspection tool, use it at
+least once before relying on the figure in analysis or delivery.
+
+Check that the intended data are shown, labels/units/legends are correct and
+readable, axes and annotations are not clipped, the layout is legible, and the
+visual conclusion matches the persisted data. Fix and re-render material issues
+before finalizing the experiment. Record the review outcome and any limitation
+in `EXPERIMENT.md` or the artifact description. If no direct viewing tool is
+available, state that limitation and perform the strongest available non-visual
+checks; do not claim visual inspection occurred.
+
 ## Result summaries and large outputs
 
 Every experiment MUST persist a Git-tracked metric summary CSV under:
@@ -411,11 +427,13 @@ After execution has ended:
 
 1. inspect raw logs;
 2. inspect `results/metrics.csv` and every relevant indexed raw output;
-3. inspect indexed heavy artifacts as needed;
-4. compare against the stated baseline or success criteria;
-5. distinguish observations from interpretation;
-6. identify anomalies, confounders, uncertainty, or invalidation;
-7. update `EXPERIMENT.md`.
+3. visually inspect material generated figures when a direct viewer is
+   available, or record that it is unavailable;
+4. inspect indexed heavy artifacts as needed;
+5. compare against the stated baseline or success criteria;
+6. distinguish observations from interpretation;
+7. identify anomalies, confounders, uncertainty, or invalidation;
+8. update `EXPERIMENT.md`.
 
 The analysis should be based on persisted outputs, not only remembered console text.
 
@@ -491,11 +509,13 @@ Before closing the experiment:
 2. verify logs are preserved;
 3. verify heavy artifacts are located correctly;
 4. verify important heavy artifacts are indexed;
-5. complete Analysis;
-6. complete Conclusion;
-7. update status;
-8. invoke `easyresearch-git-ledger`;
-9. create POST-RUN commit.
+5. verify material visual artifacts were inspected when a viewer was available,
+   or record the reason this could not be done;
+6. complete Analysis;
+7. complete Conclusion;
+8. update status;
+9. invoke `easyresearch-git-ledger`;
+10. create POST-RUN commit.
 
 ## Failed experiments
 

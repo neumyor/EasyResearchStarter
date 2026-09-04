@@ -11,6 +11,57 @@ the full protocol and entry format.
 
 ---
 
+## CMT-20260904-133324-01 — Require visual review of generated figures
+
+- Beijing time: 2026-09-04 13:33:24+08:00
+- Branch: main
+- Parent commit: ff1727f
+- Commit type: DOCS
+- Experiment IDs: none
+
+### Purpose
+
+Require agents to visually inspect material generated charts and images whenever
+the current host provides a direct image viewer or preview tool, so a successful
+rendering command is not mistaken for a usable research artifact.
+
+### Since previous commit
+
+#### Code / configuration
+
+- Added visual-artifact QA to the orchestrator, experiment lifecycle, and Git
+  ledger procedures for both repository-hosted skill trees.
+- Added the same rule to the portable, namespaced Codex/Claude plugin skills.
+- Bumped the portable plugin version from `1.0.0` to `1.0.1`.
+
+#### Documentation
+
+- Added a workspace-wide visual-output rule to AGENTS.md and CLAUDE.md.
+- Updated the management rules, research guide, and README with the required
+  direct-viewing check and the fallback requirement to disclose when no viewer
+  is available.
+
+#### Research activity
+
+- Verified all skill frontmatter and JSON manifests; confirmed the Claude Code
+  plugin manifest validates and the Codex/Claude repository skill trees remain
+  identical.
+
+### Results and conclusions
+
+No model experiment was run. Material figures now require a visual check of
+data correspondence, labels, units, legends, clipping, layout, and readability
+when direct inspection is available. If it is not available, agents must state
+that limitation rather than claim visual QA.
+
+### Artifacts and deliverables
+
+- Git-tracked: updated repository and plugin skills, host instructions,
+  research documentation, and plugin manifests.
+- Heavy/local: none.
+
+---
+
 ## CMT-20260903-174518-01 — Package portable single-writer research workflow
 
 - Beijing time: 2026-09-03 17:45:18+08:00

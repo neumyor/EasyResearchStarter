@@ -27,6 +27,15 @@ files are the source of truth for their procedures.
 Do not invent experiment/commit conventions that conflict with these skills, and
 never bypass the git-ledger protocol.
 
+## Visual output review
+
+For any material chart, plot, figure, or image generated in this workspace,
+including with Matplotlib, use a host-provided direct image viewer or preview
+tool at least once when one is available before relying on or delivering the
+output. Check readability, labels/legends/units, clipping, layout, and agreement
+with the source data. If no direct viewer is available, state that limitation
+and do not claim visual inspection occurred.
+
 ## Reusable distribution
 
 This repository is also a plugin marketplace. For safe reuse in another

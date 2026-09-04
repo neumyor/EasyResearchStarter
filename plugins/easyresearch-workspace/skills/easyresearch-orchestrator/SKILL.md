@@ -33,6 +33,9 @@ MUST:
   indexes any large raw outputs under `research_run/<experiment-id>/`.
 - Store large artifacts under `research_run/<experiment-id>/`.
 - Ensure important heavy artifacts are indexed in the experiment's Git-tracked `artifacts.csv`.
+- Visually inspect each material generated chart, figure, or image when the
+  current host provides a direct image viewer or preview tool; do not treat a
+  successful plotting command as sufficient evidence of a usable artifact.
 - Keep `ENV.md` and `research_run/` out of Git.
 - Preserve and record failed experiments.
 - Never store secrets in research documentation, logs, commit messages, or ENV files.
@@ -134,7 +137,9 @@ After execution:
    raw structured outputs to `research_run/<experiment-id>/`.
 3. Preserve heavy artifacts under `research_run/<experiment-id>/`.
 4. Update `artifacts.csv`.
-5. Analyze the experiment from the metric summary and any indexed raw outputs.
+5. Visually inspect material generated charts/figures/images when a direct
+   viewer is available, then analyze the experiment from the metric summary,
+   indexed raw outputs, and visual review.
 6. Complete the experiment record.
 7. Use `easyresearch-git-ledger` to create a POST-RUN commit.
 8. Decide the next research action.
@@ -172,7 +177,9 @@ Before declaring work complete:
 1. verify required documents exist;
 2. verify `results/metrics.csv` is present and large outputs are indexed;
 3. verify important heavy artifacts are indexed;
-4. verify `docs/LOG.md` covers all agent-created commits;
-5. verify `ENV.md` and `research_run/` are not tracked;
-6. verify repository state is intentional and explain any remaining uncommitted files.
-7. release the single-writer lock after all write work is complete.
+4. verify material visual artifacts were directly inspected when a viewer was
+   available, or document why visual inspection was unavailable;
+5. verify `docs/LOG.md` covers all agent-created commits;
+6. verify `ENV.md` and `research_run/` are not tracked;
+7. verify repository state is intentional and explain any remaining uncommitted files.
+8. release the single-writer lock after all write work is complete.

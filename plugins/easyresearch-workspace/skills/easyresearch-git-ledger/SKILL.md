@@ -23,8 +23,10 @@ MUST:
   - documentation work;
   - experiment activity;
   - commands/runs when materially relevant;
-  - results;
-  - failures;
+- results;
+- visual-review outcomes or the reason direct image inspection was unavailable
+  for material generated figures;
+- failures;
   - conclusions;
   - delivered/generated artifacts and locations.
 - Keep commit/log pairing one-to-one.

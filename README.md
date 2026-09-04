@@ -32,6 +32,8 @@
   **PRE-RUN commit** 冻结代码与参数；之后不边改边称同一实验。
 - `results/metrics.csv` 是必须入库的指标摘要；重量原始结果可使用 Parquet、NPZ、JSONL 等
   合适格式放在 `research_run/<id>/`（Git-ignore），用 `artifacts.csv` 索引。
+- 生成的关键图表/图片如可被当前宿主直接预览，必须至少视觉检查一次，确认标签、图例、裁切、
+  布局和数据表达正确后才能作为分析或交付依据。
 - `ENV.md` 与 `research_run/` 不入库；secret/凭据绝不写入文档、LOG、commit message。
 
 ---
