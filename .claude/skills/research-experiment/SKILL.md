@@ -15,6 +15,8 @@ Manage each experiment as a first-class research object with:
 - one Git-ignored heavy artifact directory;
 - a written plan before execution;
 - a PRE-RUN commit before execution;
+- background execution and progress reporting for experiments expected to exceed
+  one minute;
 - Git-tracked metric-summary persistence and indexed large outputs;
 - a written post-run analysis;
 - a POST-RUN commit after analysis.
@@ -161,6 +163,8 @@ PLANNED
 - Base commit:
 - Pre-run commit:
 - Post-run commit:
+- Launch mode: foreground or background, with reason:
+- Expected duration:
 - Machine environment: `ENV.md`
 
 ## Purpose
@@ -414,10 +418,42 @@ When starting execution:
 2. confirm parameters correspond to PRE-RUN state;
 3. confirm output directories match the experiment ID;
 4. record start time;
-5. confirm ownership of the single-writer workspace lock, then run experiment;
-6. preserve raw logs;
-7. preserve partial outputs if failure occurs;
-8. record end time and exit status.
+5. estimate whether the run should finish within one minute. If it is not
+   reasonably expected to do so, launch it in the background using a
+   project-appropriate, observable mechanism; route stdout/stderr to the
+   experiment logs and record its PID, job/session identifier, launch method,
+   and expected duration in `EXPERIMENT.md`;
+6. use foreground execution only for runs reasonably expected to finish within
+   one minute, or when a background launch is infeasible and the limitation is
+   recorded;
+7. confirm ownership of the single-writer workspace lock while preparing and
+   launching the experiment; do not let background execution authorize another
+   agent to write to the workspace;
+8. preserve raw logs;
+9. preserve partial outputs if failure occurs;
+10. record end time and exit status.
+
+## Long-run monitoring and progress reports
+
+For every background experiment, monitor an observable signal such as process
+state, log output, completed steps/epochs/items, checkpoint creation, or a
+tool-provided job status. Do not block the agent indefinitely waiting for a
+long run; use bounded checks or the host's monitoring facility.
+
+Once an experiment has run for more than five minutes, report progress at least
+once promptly. The report must include:
+
+- Experiment ID and elapsed time;
+- current state and the evidence used (for example completed/total steps or
+  most recent log/checkpoint);
+- progress achieved, or an explicit statement that progress is not observable;
+- an estimated completion time based on the observed rate and remaining work,
+  or why a defensible ETA cannot yet be calculated.
+
+Record the same factual monitoring information in the experiment's light log
+or `EXPERIMENT.md` when it materially affects reproducibility, diagnosis, or
+later interpretation. If the run completes before the five-minute threshold,
+the normal completion record is sufficient.
 
 Do not modify `EXPERIMENT.md` analysis while the experiment is still producing results except for factual execution-state updates when necessary.
 
@@ -451,6 +487,8 @@ Include:
 - runtime environment reference;
 - success/failure status;
 - material runtime events.
+- launch mode and, for a background run, the recorded process/job identifier;
+- any required over-five-minute progress report, evidence, and ETA.
 
 ### Results
 

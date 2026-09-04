@@ -18,7 +18,7 @@
 | `autoresearch-orchestrator` | 控制平面：决定下一步做什么，协调其余三个 | `/autoresearch-orchestrator`（Claude Code）<br>`$autoresearch-orchestrator`（Codex） |
 | `research-environment` | 机器/资源发现，维护 Git-ignore 的 `ENV.md` 快照 | `/research-environment` |
 | `research-git-ledger` | commit 协议：每个 agent 创建的 commit 恰好对应一条按最新优先排列的 `docs/LOG.md`，用 `Research-Log-ID` 关联 | `/research-git-ledger` |
-| `research-experiment` | 实验生命周期：命名、light/heavy 记录、PRE-RUN/POST-RUN commit、CSV 结果、失败与收尾 | `/research-experiment` |
+| `research-experiment` | 实验生命周期：命名、light/heavy 记录、PRE-RUN/POST-RUN commit、CSV 结果、长实验后台监控、失败与收尾 | `/research-experiment` |
 | `easyresearch-adopt-workspace` | 将工作流增量接入一个既有工作区；默认 plugin-only，不覆写已有内容 | `/easyresearch-adopt-workspace`（Claude Code）<br>`$easyresearch-adopt-workspace`（Codex） |
 
 ### 核心不变量
@@ -34,6 +34,8 @@
   **PRE-RUN commit** 冻结代码与参数；之后不边改边称同一实验。
 - `results/metrics.csv` 是必须入库的指标摘要；重量原始结果可使用 Parquet、NPZ、JSONL 等
   合适格式放在 `research_run/<id>/`（Git-ignore），用 `artifacts.csv` 索引。
+- 预计超过 1 分钟的实验优先在后台运行并保留可观察日志；运行超过 5 分钟后至少报告一次
+  已运行时间、进度证据和按当前进度估算的 ETA（无法可靠估算时说明原因）。
 - 生成的关键图表/图片如可被当前宿主直接预览，必须至少视觉检查一次，确认标签、图例、裁切、
   布局和数据表达正确后才能作为分析或交付依据。
 - `ENV.md` 与 `research_run/` 不入库；secret/凭据绝不写入文档、LOG、commit message。

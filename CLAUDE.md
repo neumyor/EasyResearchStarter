@@ -20,8 +20,8 @@ files are the source of truth for their procedures.
   exactly one newest-first `docs/LOG.md` entry, joined by a shared
   `Research-Log-ID`; read the ledger progressively from its head.
 - `/research-experiment` — experiment lifecycle: naming, light/heavy record
-  layout, PRE-RUN/POST-RUN commits, CSV-based result persistence, failure and
-  closure handling.
+  layout, PRE-RUN/POST-RUN commits, CSV-based result persistence, long-run
+  background execution/progress reporting, failure and closure handling.
 - `/easyresearch-adopt-workspace` — explicitly and additively adopts this
   workflow in an existing workspace; plugin-only operation is the default.
 

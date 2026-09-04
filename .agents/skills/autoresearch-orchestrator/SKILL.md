@@ -38,6 +38,9 @@ MUST:
 - Visually inspect each material generated chart, figure, or image when the
   current host provides a direct image viewer or preview tool; do not treat a
   successful plotting command as sufficient evidence of a usable artifact.
+- Run an experiment in the background when it is not reasonably expected to
+  finish within one minute; once it exceeds five minutes, report observed
+  progress and an ETA based on that progress.
 - Keep `ENV.md` and `research_run/` out of Git.
 - Preserve and record failed experiments.
 - Never store secrets in research documentation, logs, commit messages, or ENV files.
@@ -130,6 +133,12 @@ Before running any experiment:
 3. Use `research-git-ledger` to create a PRE-RUN commit.
 4. Record the resulting commit identity in the experiment record where appropriate.
 5. Only then start the experiment.
+
+For a run expected to exceed one minute, keep it observable in the background
+rather than blocking the research loop. Once its elapsed time exceeds five
+minutes, obtain bounded status evidence and report the Experiment ID, elapsed
+time, progress, and ETA (or why no defensible ETA is available) before simply
+continuing to wait.
 
 ## Experiment completion protocol
 

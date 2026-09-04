@@ -11,6 +11,56 @@ the full protocol and entry format.
 
 ---
 
+## CMT-20260904-212308-01 — Monitor long-running experiments in background
+
+- Beijing time: 2026-09-04 21:23:08+08:00
+- Branch: main
+- Parent commit: e254751
+- Commit type: DOCS
+- Experiment IDs: none
+
+### Purpose
+
+Add an explicit operating rule for experiments whose expected runtime makes
+foreground waiting inefficient or opaque.
+
+### Since previous commit
+
+#### Code / configuration
+
+- Required experiments not reasonably expected to finish within one minute to
+  prefer a project-appropriate, observable background launch.
+- Required background launches to preserve logs and record their launch method,
+  task/process identifier, and expected duration.
+- Required a progress report once runtime exceeds five minutes, including
+  elapsed time, evidence-backed progress, and an ETA derived from observed
+  progress or an explanation of why no defensible ETA exists.
+- Added the same lifecycle rule to the repository-hosted Claude/Codex skills
+  and portable namespaced plugin skills; bumped plugin version to `1.0.3`.
+
+#### Documentation
+
+- Updated workspace instructions, management rules, research guide, and README
+  with the long-run background and reporting expectation.
+
+#### Research activity
+
+- No experiment was run; this is a prompt-only workflow change.
+
+### Results and conclusions
+
+Long experiments now have a clear, low-blocking execution mode and a concrete
+five-minute reporting threshold. ETA must be grounded in observed work rather
+than asserted without evidence.
+
+### Artifacts and deliverables
+
+- Git-tracked: synchronized skill instructions, portable plugin manifests,
+  workspace documentation, and this ledger entry.
+- Heavy/local: none.
+
+---
+
 ## CMT-20260904-203739-01 — Make research ledger newest-first
 
 - Beijing time: 2026-09-04 20:37:39+08:00
